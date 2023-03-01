@@ -5,18 +5,20 @@ on:
     branches:
       - main
 
-env:
-  MRSK_REGISTRY_PASSWORD: ${{ secrets.MRSK_REGISTRY_PASSWORD }}
-
 jobs:
   deploy_job:
     name: A job to deploy web apps 
     runs-on: ubuntu-latest 
     steps:
       - uses: actions/checkout@v3
-      - uses: PhutureCorp/container-ssh-agent@v0.0.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          home-dir: /root
+      - name: Setup SSH Keys and known_hosts
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+        run: |
+          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
+          ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
       - uses: amirmarmul/mrsk-deploy-action@v1.0.0
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+          MRSK_REGISTRY_PASSWORD: ${{ secrets.MRSK_REGISTRY_PASSWORD }}
         
