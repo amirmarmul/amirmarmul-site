@@ -1,0 +1,15 @@
+service: my-site
+image: kacestudio/my-site
+servers:
+  web:
+    hosts:
+      - 18.141.200.182
+    labels:
+      traefik.http.routers.my-site.rule: Host(`amirmarmul.my.id`)
+registry:
+  username: kacestudio
+  password:
+    - MRSK_REGISTRY_PASSWORD
+healthcheck:
+  path: /
+  port: 80
