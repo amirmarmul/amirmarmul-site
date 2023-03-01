@@ -17,5 +17,6 @@ jobs:
       - uses: PhutureCorp/container-ssh-agent@v0.0.1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          home-dir: /root
       - uses: amirmarmul/mrsk-deploy-action@v1.0.0
         
