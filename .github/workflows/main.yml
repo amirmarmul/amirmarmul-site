@@ -4,7 +4,9 @@ on:
   push:
     branches:
       - main
-
+env:
+  SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+  MRSK_REGISTRY_PASSWORD: ${{ secrets.MRSK_REGISTRY_PASSWORD }}
 jobs:
   deploy_job:
     name: A job to deploy web apps 
@@ -12,13 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Setup SSH Keys and known_hosts
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
           ssh-add - <<< "${{ secrets.SSH_PRIVATE_KEY }}"
+
       - uses: amirmarmul/mrsk-deploy-action@v1.0.0
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-          MRSK_REGISTRY_PASSWORD: ${{ secrets.MRSK_REGISTRY_PASSWORD }}
+        
         
